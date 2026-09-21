@@ -278,12 +278,12 @@ Responses are JSON: structured detection metadata plus **already-drawn images** 
 | `GET`  | `/` | App info, classes, default confidence, links to `/docs` |
 | `GET`  | `/health` | Always 200; reports `model_loaded` / `model_error` |
 | `GET`  | `/ready` | Readiness probe — 503 until the model has warmed up |
-| `POST` | [`/predict/image`](https://sonarvision.onrender.com/docs#/default/predict_image_predict_image_post) | Upload one image → Cloudinary URL of the boxed image + detections |
-| `POST` | [`/predict/video`](https://sonarvision.onrender.com/docs#/default/predict_video_predict_video_post) | Upload a video → Cloudinary URLs of all boxed frames (1 frame / 3 s) + per-frame detections |
-| `POST` | [`/predict/realtime`](https://sonarvision.onrender.com/docs#/default/predict_realtime_predict_realtime_post) | Upload a webcam image (using webcam as drone proxy) frame → instant detection (one JSON per frame, frontend capture loop) |
-| `POST` | [`/predict/log`](https://sonarvision.onrender.com/docs#/default/predict_log_predict_log_post) | Upload `.xtf` / `.jsf` → Cloudinary URLs of boxed overviews + tiles + merged, geotagged detections |
+| `POST` | [`/predict/image`](https://oceansentinal.onrender.com/docs#/default/predict_image_predict_image_post) | Upload one image → Cloudinary URL of the boxed image + detections |
+| `POST` | [`/predict/video`](https://oceansentinal.onrender.com/docs#/default/predict_video_predict_video_post) | Upload a video → Cloudinary URLs of all boxed frames (1 frame / 3 s) + per-frame detections |
+| `POST` | [`/predict/realtime`](https://oceansentinal.onrender.com/docs#/default/predict_realtime_predict_realtime_post) | Upload a webcam image (using webcam as drone proxy) frame → instant detection (one JSON per frame, frontend capture loop) |
+| `POST` | [`/predict/log`](https://oceansentinal.onrender.com/docs#/default/predict_log_predict_log_post) | Upload `.xtf` / `.jsf` → Cloudinary URLs of boxed overviews + tiles + merged, geotagged detections |
 
-All prediction endpoints accept the uploaded file as multipart field `file` and an optional `conf` query parameter (`default 0.70`, range `0.01–1.0`). The live service is hosted at **https://sonarvision.onrender.com** — you can test every endpoint interactively from its `#/default/...` page in [the Swagger UI](https://sonarvision.onrender.com/docs).
+All prediction endpoints accept the uploaded file as multipart field `file` and an optional `conf` query parameter (`default 0.70`, range `0.01–1.0`). The live service is hosted at **https://oceansentinal.onrender.com** — you can test every endpoint interactively from its `#/default/...` page in [the Swagger UI](https://oceansentinal.onrender.com/docs).
 
 
 
@@ -343,7 +343,7 @@ python -m uvicorn api.predict_api:app --host 0.0.0.0 --port 8000
 python api/predict_api.py
 ```
 
-Interactive Swagger UI: <https://sonarvision.onrender.com/docs>
+Interactive Swagger UI: <https://oceansentinal.onrender.com/docs>
 
 ---
 

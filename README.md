@@ -58,7 +58,7 @@ Side-Scan Sonar Input (Image / Video / Log / Live Stream)
 ### 🧠 Intelligent Acoustic Object Detection & Filtering
 - **Trained Marine Object Classes:** Ghost Nets, Underwater Pipes, Metallic Cylinders, Shipwrecks, Aircraft Debris, and Unknown Anthropogenic Debris.
 - **Natural Feature Discrimination:** Automated filtering of benign seabed morphology (natural ridges, sand ripples, rocks) to minimize false alarms.
-- **YOLOv8 Inference Service:** A dedicated Python FastAPI microservice (`https://sonarvision.onrender.com`) runs the sonar-tuned YOLOv8 model, with automated fallback handling if the service is unreachable.
+- **YOLOv8 Inference Service:** A dedicated Python FastAPI microservice (`https://oceansentinal.onrender.com`) runs the sonar-tuned YOLOv8 model, with automated fallback handling if the service is unreachable.
 
 ### ⚠️ Dynamic Hazard & Risk Assessment
 - **Multi-Factor Scoring Matrix (0–100):** Real-time hazard indexing based on object classification, detection confidence, geometric scale (bounding box area), depth tier, and proximity to marine reserves/coral biomes.
@@ -151,15 +151,23 @@ JWT in HTTP-only cookies with Bearer fallback, protected routes, and role-based 
 ## 🧠 AI Detection & Hazard Scoring Engine
 
 ### AI Detection Service
-- **Model:** Ultralytics YOLOv8, sonar-tuned checkpoints served via Python FastAPI.
+- **Model:** YOLOv8 sonar-tuned weights exported to ONNX and served through Python FastAPI with ONNX Runtime.
 - **Pre-processing:** OpenCV CLAHE contrast normalization and despeckling before inference.
 - **Backend integration:** `backend/src/services/aiDetection.service.js` posts media to `AI_SERVICE_URL` and normalizes the response.
 - **Confidence filtering:** Low-confidence detections (below 50%) are ignored; natural features (rocks, sand ripples) are filtered out.
 
-Example YOLO service response:
+Example prediction service response:
 
 ```json
-{ "detections": [{ "class": "ghost_net", "confidence": 0.94, "bbox": [120, 80, 350, 230] }] }
+{
+  "detections": [
+    {
+      "class": "ghost_net",
+      "confidence": 0.94,
+      "bbox": { "x1": 120, "y1": 80, "x2": 350, "y2": 230 }
+    }
+  ]
+}
 ```
 
 ### 1. Acoustic Target Classes & Base Risk
@@ -170,6 +178,8 @@ Example YOLO service response:
   [Cylinder]        ==> Base Risk: 60 | Pressurized or hazardous cargo threat
   [Pipe]            ==> Base Risk: 50 | Discarded industrial conduit
   [Unknown Debris]  ==> Base Risk: 40 | Unclassified artificial signature
+  [Plane]           ==> Base Risk: 75 | Submerged aircraft target
+  [Human]           ==> Base Risk: 85 | Possible human-related target
   [Rock / Ripple]   ==> Ignored       | Filtered as benign seabed morphology
 ```
 
@@ -181,8 +191,8 @@ $$\text{Hazard Score} = \text{Base Risk} + \Delta_{\text{size}} + \Delta_{\text{
 
 - **Scale Bonus ($\Delta_{\text{size}}$):** +10 to +15 points for anomalies spanning significant seabed area.
 - **Confidence Bonus ($\Delta_{\text{confidence}}$):** +5 to +10 points for detections with confidence ≥ 85%.
-- **Eco-Zone Sensitivity ($\Delta_{\text{location}}$):** +10 points if coordinates fall within marine protected areas, sanctuaries, or coral reefs.
-- **Shallow Water Navigation Hazard ($\Delta_{\text{depth}}$):** +5 points for depths < 30 m posing surface vessel collision risk.
+- **Eco-Zone Sensitivity ($\Delta_{\text{location}}$):** +10 points when the location name contains a protected-area, sanctuary, reserve, coral, reef, Bengal, or Arabian Sea keyword.
+- **Shallow Water Sensitivity ($\Delta_{\text{depth}}$):** +5 points for depths < 30 m and another +5 points for depths < 10 m. Environmental bonuses are capped at 15 points.
 
 Levels: 0–30 LOW (green), 31–60 MEDIUM (yellow), 61–80 HIGH (orange), 81–100 CRITICAL (red).
 
@@ -191,7 +201,7 @@ Levels: 0–30 LOW (green), 31–60 MEDIUM (yellow), 61–80 HIGH (orange), 81�
 ## 📁 Repository Structure
 
 ```
-SonarVision_frontend/
+OceanSentinal/
 ├── backend/
 │   ├── src/
 │   │   ├── config/             # MongoDB Atlas connection & database seeders
@@ -204,7 +214,7 @@ SonarVision_frontend/
 │   │   ├── app.js              # Express app configuration, CORS, middleware assembly
 │   │   └── server.js           # Server bootstrap & process lifecycle
 │   ├── package.json
-│   └── .env                    # Backend environment config
+│   └── .env                    # Local backend environment config (not committed)
 │
 ├── frontend/
 │   ├── src/
@@ -237,7 +247,18 @@ SonarVision_frontend/
 │   ├── vite.config.js
 │   └── tailwind.config.js
 │
-├── requirements.txt            # Unified project dependency manifest
+├── ml_model/
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── predict_api.py      # FastAPI ONNX inference service
+│   ├── backend/                # Training and preprocessing notebooks/scripts
+│   ├── best/                   # Trained model artifacts
+│   ├── input/                  # Sample image, video, and realtime inputs
+│   ├── output/                 # Generated predictions and filtered images
+│   ├── requirements.txt        # Python ML service dependencies
+│   └── render.yaml             # Render Blueprint configuration
+│
+├── requirements.txt            # Informational dependency inventory; use npm in backend/frontend
 └── README.md                   # System documentation
 ```
 
@@ -345,8 +366,8 @@ SonarVision_frontend/
 
 ### 1. Clone & Setup Workspace
 ```bash
-git clone https://github.com/lalitchandra00/SonarVision_frontend.git
-cd SonarVision_frontend
+git clone <repository-url>
+cd OceanSentinal
 ```
 
 ### 2. Backend Installation & Execution
@@ -354,8 +375,7 @@ cd SonarVision_frontend
 cd backend
 npm install
 
-# Create local environment configuration
-cp .env.example .env   # Or create .env based on the configuration guide below
+# Create backend/.env using the configuration guide below
 
 # Seed demo users & sample missions (optional)
 npm run seed
@@ -398,13 +418,26 @@ CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
 # AI Detection Microservice (FastAPI YOLOv8)
-AI_SERVICE_URL=https://sonarvision.onrender.com
+AI_SERVICE_URL=https://oceansentinal.onrender.com
 ```
 
 ### Frontend Configuration (`frontend/.env`)
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
+
+### ML Service Deployment on Render
+
+Create a Python Web Service from this repository with the following settings:
+
+```text
+Root Directory: ml_model
+Build Command: pip install --upgrade pip && pip install -r requirements.txt
+Start Command: python -m uvicorn api.predict_api:app --host 0.0.0.0 --port $PORT --timeout-keep-alive 120
+Health Check Path: /health
+```
+
+The service listens on Render's assigned `$PORT`. Add Cloudinary credentials as Render environment variables if prediction images should be uploaded to Cloudinary. The service can still start without them, but returned image URLs will be `null`.
 
 ---
 
@@ -429,7 +462,7 @@ Backend:
 
 AI Microservice:
   ├── Framework: Python FastAPI
-  ├── Model: Ultralytics YOLOv8 Sonar-Tuned Checkpoints
+  ├── Model: YOLOv8 exported to ONNX, served with ONNX Runtime
   └── Pre-processing: OpenCV (CLAHE contrast normalization, despeckling)
 ```
 
