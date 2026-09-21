@@ -56,44 +56,25 @@ export const getDashboardAnalytics = asyncHandler(async (req, res) => {
     ])
   ]);
 
-  // Format trend data for charts (last 6 months mock if not enough data)
+  // Format trend data for charts using real DB data only
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  let trendData = monthlyTrend.map(item => ({
+  const trendData = monthlyTrend.map(item => ({
     month: monthNames[item._id - 1],
     hazards: item.count
   }));
 
-  // If no real trend data, generate realistic mock for demo
-  if (trendData.length < 3) {
-    trendData = [
-      { month: 'Mar', hazards: Math.floor(Math.random() * 20) + 10 },
-      { month: 'Apr', hazards: Math.floor(Math.random() * 25) + 15 },
-      { month: 'May', hazards: Math.floor(Math.random() * 30) + 20 },
-      { month: 'Jun', hazards: Math.floor(Math.random() * 35) + 25 },
-      { month: 'Jul', hazards: Math.floor(Math.random() * 40) + 30 },
-      { month: 'Aug', hazards: totalDetections || Math.floor(Math.random() * 50) + 35 }
-    ];
-  }
-
-  const typeDistribution = detectionsByType.map(item => ({
-    name: item._id,
+  // Real type distribution from DB only — no mock fallback
+  const finalTypeDistribution = detectionsByType.map(item => ({
+    name: item._id || 'Unknown',
     value: item.count
   }));
 
-  // If no detections, provide mock distribution for demo visuals
-  const finalTypeDistribution = typeDistribution.length > 0 ? typeDistribution : [
-    { name: 'Ghost Net', value: 12 },
-    { name: 'Pipe', value: 8 },
-    { name: 'Cylinder', value: 6 },
-    { name: 'Shipwreck', value: 3 },
-    { name: 'Unknown Debris', value: 9 }
-  ];
-
+  // Real hazard distribution using actual counts (0 if none)
   const hazardDistribution = [
-    { level: 'LOW', count: detectionsByHazard.find(h => h._id === 'LOW')?.count || 2 },
-    { level: 'MEDIUM', count: detectionsByHazard.find(h => h._id === 'MEDIUM')?.count || 5 },
-    { level: 'HIGH', count: highCount || 8 },
-    { level: 'CRITICAL', count: criticalCount || 3 }
+    { level: 'LOW', count: detectionsByHazard.find(h => h._id === 'LOW')?.count || 0 },
+    { level: 'MEDIUM', count: detectionsByHazard.find(h => h._id === 'MEDIUM')?.count || 0 },
+    { level: 'HIGH', count: highCount },
+    { level: 'CRITICAL', count: criticalCount }
   ];
 
   // Top critical anomalies

@@ -74,31 +74,47 @@ const Dashboard = () => {
         <div className="lg:col-span-2 glass rounded-2xl p-6">
           <h3 className="font-semibold mb-6">Detection Trend • Last 6 Months</h3>
           <div className="h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={charts.trend}>
-                <XAxis dataKey="month" stroke="#475569" fontSize={12} />
-                <YAxis stroke="#475569" fontSize={12} />
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
-                <Line type="monotone" dataKey="hazards" stroke="#22d3ee" strokeWidth={2.5} dot={{ fill: '#22d3ee', r: 4 }} activeDot={{ r: 6, fill: '#06b6d4' }} />
-              </LineChart>
-            </ResponsiveContainer>
+            {charts.trend.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-sm text-white/30">No detection data yet</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={charts.trend}>
+                  <XAxis dataKey="month" stroke="#475569" fontSize={12} tick={{ fill: '#94a3b8' }} />
+                  <YAxis stroke="#475569" fontSize={12} tick={{ fill: '#94a3b8' }} />
+                  <Tooltip
+                    contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f1f5f9' }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                    itemStyle={{ color: '#22d3ee' }}
+                  />
+                  <Line type="monotone" dataKey="hazards" stroke="#22d3ee" strokeWidth={2.5} dot={{ fill: '#22d3ee', r: 4 }} activeDot={{ r: 6, fill: '#06b6d4' }} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
         <div className="glass rounded-2xl p-6">
           <h3 className="font-semibold mb-6">Object Distribution</h3>
           <div className="h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={charts.objectDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
-                  {charts.objectDistribution.map((_, idx) => (
-                    <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            {charts.objectDistribution.length === 0 ? (
+              <div className="flex items-center justify-center h-full text-sm text-white/30">No detections recorded yet</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={charts.objectDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
+                    {charts.objectDistribution.map((_, idx) => (
+                      <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f1f5f9' }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                    itemStyle={{ color: '#e2e8f0' }}
+                  />
+                  <Legend wrapperStyle={{ color: '#94a3b8', fontSize: '12px' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
       </div>
@@ -109,9 +125,13 @@ const Dashboard = () => {
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.riskDistribution}>
-                <XAxis dataKey="level" stroke="#475569" fontSize={11} />
-                <YAxis stroke="#475569" fontSize={11} />
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
+                <XAxis dataKey="level" stroke="#475569" fontSize={11} tick={{ fill: '#94a3b8' }} />
+                <YAxis stroke="#475569" fontSize={11} tick={{ fill: '#94a3b8' }} />
+                <Tooltip
+                  contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f1f5f9' }}
+                  labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                  itemStyle={{ color: '#e2e8f0' }}
+                />
                 <Bar dataKey="count" radius={[8,8,0,0]}>
                   {charts.riskDistribution.map((entry, idx) => (
                     <Cell key={idx} fill={
