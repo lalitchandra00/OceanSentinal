@@ -1,0 +1,20 @@
+# SonarVision Requirements
+# Pure onnxruntime inference — no torch/ultralytics needed.
+# Total install size: ~350 MB  (vs ~2 GB with ultralytics+torch)
+# Safe for Render free tier (512 MB RAM).
+
+numpy
+# Headless OpenCV — no libGL.so.1 needed on Linux servers
+opencv-python-headless
+matplotlib
+requests
+tqdm
+fastapi
+uvicorn[standard]
+python-multipart
+# ONNX runtime for model inference (replaces ultralytics+torch)
+onnxruntime
+pyxtf
+# Cloudinary image hosting (boxed predictions -> secure URLs)
+cloudinary
+python-dotenv
