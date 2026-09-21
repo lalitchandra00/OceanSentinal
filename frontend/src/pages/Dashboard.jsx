@@ -9,6 +9,7 @@ import StatCard from '../components/StatCard';
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,38 +18,7 @@ const Dashboard = () => {
         setData(res.data.data);
       } catch (e) {
         console.error(e);
-        // Mock fallback for demo when backend not reachable
-        setData({
-          stats: { totalMissions: 24, totalImages: 12458, totalDetections: 318, criticalCount: 42, highCount: 67 },
-          charts: {
-            trend: [
-              { month: 'Mar', hazards: 18 },
-              { month: 'Apr', hazards: 24 },
-              { month: 'May', hazards: 32 },
-              { month: 'Jun', hazards: 28 },
-              { month: 'Jul', hazards: 41 },
-              { month: 'Aug', hazards: 53 }
-            ],
-            objectDistribution: [
-              { name: 'Ghost Net', value: 12 },
-              { name: 'Pipe', value: 8 },
-              { name: 'Cylinder', value: 6 },
-              { name: 'Shipwreck', value: 3 },
-              { name: 'Unknown Debris', value: 9 }
-            ],
-            riskDistribution: [
-              { level: 'LOW', count: 12 },
-              { level: 'MEDIUM', count: 18 },
-              { level: 'HIGH', count: 8 },
-              { level: 'CRITICAL', count: 3 }
-            ]
-          },
-          recentMissions: [
-            { _id: '1', name: 'Mission Alpha - Arabian Sea Deep Survey', locationName: 'Arabian Sea', totalImages: 250, totalDetections: 12, criticalCount: 3, status: 'completed', createdAt: new Date() },
-            { _id: '2', name: 'Mission Beta - Bay of Bengal Transect', locationName: 'Bay of Bengal', totalImages: 180, totalDetections: 8, criticalCount: 1, status: 'completed', createdAt: new Date() }
-          ],
-          topCritical: []
-        });
+        setError('Dashboard data could not be loaded. Check the backend connection and try again.');
       } finally {
         setLoading(false);
       }
@@ -63,6 +33,21 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="glass rounded-2xl p-8 text-center">
+        <h1 className="text-xl font-semibold">Dashboard unavailable</h1>
+        <p className="text-sm text-white/50 mt-2">{error}</p>
+        <button type="button" onClick={() => window.location.reload()} className="mt-5 px-4 py-2 rounded-lg bg-white text-black text-sm font-medium">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  const stats = data?.stats || {};
+  const charts = data?.charts || { trend: [], objectDistribution: [], riskDistribution: [] };
 
   const COLORS = ['#22d3ee', '#0ea5e9', '#f97316', '#ef4444', '#8b5cf6'];
 
@@ -79,10 +64,10 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Missions" value={data?.stats.totalMissions || 0} subtitle="Active surveys" icon={FaMapMarkedAlt} color="cyan" trend="+12% this month" />
-        <StatCard title="Images Analyzed" value={(data?.stats.totalImages || 0).toLocaleString()} subtitle="Side-scan frames" icon={FaImages} color="violet" trend="94% AI processed" />
-        <StatCard title="Hazards Detected" value={data?.stats.totalDetections || 0} subtitle="Artificial anomalies" icon={FaWater} color="emerald" trend={`${data?.stats.criticalCount || 0} critical`} />
-        <StatCard title="Critical Hazards" value={data?.stats.criticalCount || 0} subtitle="Immediate attention" icon={FaExclamationTriangle} color="red" trend="High priority" />
+        <StatCard title="Total Missions" value={stats.totalMissions || 0} subtitle="Recorded missions" icon={FaMapMarkedAlt} color="cyan" />
+        <StatCard title="Images Analyzed" value={(stats.totalImages || 0).toLocaleString()} subtitle="Side-scan frames" icon={FaImages} color="violet" />
+        <StatCard title="Hazards Detected" value={stats.totalDetections || 0} subtitle="Artificial anomalies" icon={FaWater} color="emerald" trend={`${stats.criticalCount || 0} critical`} />
+        <StatCard title="Critical Hazards" value={stats.criticalCount || 0} subtitle="Immediate attention" icon={FaExclamationTriangle} color="red" />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -90,7 +75,7 @@ const Dashboard = () => {
           <h3 className="font-semibold mb-6">Detection Trend • Last 6 Months</h3>
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data?.charts.trend}>
+              <LineChart data={charts.trend}>
                 <XAxis dataKey="month" stroke="#475569" fontSize={12} />
                 <YAxis stroke="#475569" fontSize={12} />
                 <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
@@ -105,8 +90,8 @@ const Dashboard = () => {
           <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={data?.charts.objectDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
-                  {data?.charts.objectDistribution?.map((_, idx) => (
+                <Pie data={charts.objectDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
+                  {charts.objectDistribution.map((_, idx) => (
                     <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
                   ))}
                 </Pie>
@@ -123,12 +108,12 @@ const Dashboard = () => {
           <h3 className="font-semibold mb-6">Risk Distribution</h3>
           <div className="h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data?.charts.riskDistribution}>
+              <BarChart data={charts.riskDistribution}>
                 <XAxis dataKey="level" stroke="#475569" fontSize={11} />
                 <YAxis stroke="#475569" fontSize={11} />
                 <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
                 <Bar dataKey="count" radius={[8,8,0,0]}>
-                  {data?.charts.riskDistribution?.map((entry, idx) => (
+                  {charts.riskDistribution.map((entry, idx) => (
                     <Cell key={idx} fill={
                       entry.level === 'CRITICAL' ? '#ef4444' :
                       entry.level === 'HIGH' ? '#f97316' :
@@ -158,7 +143,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?.recentMissions?.map((m) => (
+                {data?.recentMissions?.length ? data.recentMissions.map((m) => (
                   <tr key={m._id} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
                     <td className="py-3">
                       <p className="font-medium truncate max-w-[260px]">{m.name}</p>
@@ -177,7 +162,11 @@ const Dashboard = () => {
                       </span>
                     </td>
                   </tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan="5" className="py-8 text-center text-sm text-white/40">No missions recorded yet.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
