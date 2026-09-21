@@ -1,167 +1,85 @@
-# OceanSentinel AI — Marine Debris Detection Platform
-# OceanSentinel AI — Marine Debris & Sonar Intelligence Platform
-
-**AI-Powered Side-Scan Sonar Analysis for Marine Debris Detection**
 <div align="center">
 
-Professional MERN-stack application for government/marine research agencies to automatically analyze Side-Scan Sonar (SSS) imagery, detect ghost nets, pipes, cylinders, shipwrecks, and unknown artificial anomalies.
-![OceanSentinel AI Banner](https://img.shields.io/badge/OceanSentinel-AI%20Sonar%20Vision-06b6d4?style=for-the-badge&logo=target&logoColor=white)
+# 🌊 OceanSentinel AI — Marine Debris & Sonar Intelligence Platform
+
+**AI-Powered Side-Scan Sonar Analysis for Marine Debris Detection**
+
 ![Stack](https://img.shields.io/badge/Stack-MERN%20+%20FastAPI%20YOLO-0ea5e9?style=for-the-badge&logo=react&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Side--Scan%20Sonar%20(SSS)-0284c7?style=for-the-badge&logo=safari&logoColor=white)
+![AI](https://img.shields.io/badge/AI-YOLOv8%20Sonar%20Model-06b6d4?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-Side--Scan%20Sonar%20(SSS)-0284c7?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-38bdf8?style=for-the-badge)
 
-![OceanSentinel](https://img.shields.io/badge/Stack-MERN-22d3ee?style=for-the-badge)
-![AI](https://img.shields.io/badge/AI-Mock%20YOLO%20Engine-06b6d4?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-<br />
+Professional MERN-stack application for government and marine research agencies to automatically analyze Side-Scan Sonar (SSS) imagery, video streams, and sonar logs, detecting ghost nets, pipes, cylinders, shipwrecks, and unknown artificial anomalies using a **YOLOv8-based detection service**.
 
-## 🌊 Problem Solved
-**Advanced AI-Powered Acoustic Vision for Autonomous Marine Debris Detection, Sonar Video Streams, Bathymetric Sonar Logs (.XTF/.JSF), and Live Drone/Webcam Feeds.**
-
-- Ghost nets threaten marine ecosystems
-- Manual sonar inspection is slow (8+ hrs per survey)
-- Thousands of sonar images create backlogs
-- Natural features mimic debris acoustically
 [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Multi-Modal Ingestion](#-multi-modal-ingestion-pipeline) • [AI & Hazard Scoring](#-ai-detection--hazard-scoring-engine) • [API Reference](#-api-endpoints-reference) • [Quick Start](#-quick-start--installation) • [Deployment](#-environment-variables--deployment)
 
-## 🔄 Workflow
 </div>
 
-```
-Side-Scan Sonar Image
-↓ Upload (JPG/PNG/TIFF/ZIP)
-↓ Preprocessing (Speckle reduction, Contrast)
-↓ AI Object Detection (Mock YOLO)
-↓ Confidence Filtering (<50% ignored)
-↓ Hazard Scoring (0-100)
-↓ Metadata Parsing + Geotagging
-↓ Interactive Map Visualization
-↓ JSON/CSV Report Generation
-```
 ---
 
-## 🧱 Tech Stack
 ## 🌊 Overview & Problem Statement
 
-**Frontend**
-- React 18 + Vite
-- Tailwind CSS (dark ocean theme, glassmorphism)
-- React Router DOM, Axios
-- Framer Motion, React Icons
-- Recharts (analytics), React Leaflet (maps)
-- React Dropzone, Toastify
-Ghost fishing gear, discarded industrial pipelines, chemical cylinders, and artificial maritime wreckage represent a severe and escalating ecological threat to oceanic biodiversity, navigation channels, and coral reef ecosystems. 
+Ghost fishing gear, discarded industrial pipelines, chemical cylinders, and artificial maritime wreckage represent a severe and escalating ecological threat to oceanic biodiversity, navigation channels, and coral reef ecosystems.
 
-**Backend**
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT + HTTP-only cookies + bcryptjs
-- Multer + Cloudinary
-- Helmet, CORS, Morgan, Cookie Parser
-### Critical Challenges in Conventional Marine Monitoring:
+### Critical Challenges in Conventional Marine Monitoring
 - **Exhaustive Manual Inspection:** Hydrographic surveyors spend **8+ hours per survey mission** reviewing thousands of megabytes of acoustic waterfall imagery.
-- **Acoustic Mimicry & Speckle Noise:** Natural seabed structures (such as geological ridges, sandwaves, and boulders) acoustic echo profiles mimic man-made debris, leading to human fatigue and high error rates.
-- **Format Heterogeneity:** Side-scan sonar data arrives across raw digital logs (`.xtf`, `.jsf`), video waterfalls, or hydrographic mosaic stills with fragmented geolocation metadata.
-- **Latency in Response:** Without real-time edge processing or immediate hazard indexing, critical navigational hazards and coral-entangling ghost nets go unaddressed for weeks.
+- **Acoustic Mimicry & Speckle Noise:** Natural seabed structures (geological ridges, sandwaves, boulders) produce echo profiles that mimic man-made debris, leading to human fatigue and high error rates.
+- **Format Heterogeneity:** Side-scan sonar data arrives as raw digital logs (`.xtf`, `.jsf`), video waterfalls, or hydrographic mosaic stills with fragmented geolocation metadata.
+- **Latency in Response:** Without real-time processing or immediate hazard indexing, critical navigational hazards and coral-entangling ghost nets go unaddressed for weeks.
 
-**AI Architecture (Mock for prototype)**
-```
-Frontend → Express API → Mock AI Detection Engine → Results
-Future:  → Python FastAPI YOLO Service → Real Model
-```
-**OceanSentinel AI** resolves this bottleneck by integrating state-of-the-art computer vision (YOLO-based acoustic detection) with full-lifecycle mission governance, geospatial mapping, automated hazard scoring, and multi-modal file ingestion.
+**OceanSentinel AI** resolves this bottleneck by integrating a trained YOLOv8 acoustic detection model with full-lifecycle mission governance, geospatial mapping, automated hazard scoring, and multi-modal file ingestion.
 
-Isolated in `services/aiDetection.service.js` for easy replacement.
 ---
 
-## 📁 Project Structure
-## ⚡ Key Features
+## 🔄 Workflow
 
 ```
-ocean-sentinel-ai/
-├── backend/
-│   ├── src/
-│   │   ├── config/ (db, cloudinary, seed)
-│   │   ├── controllers/
-│   │   ├── models/ (User, Mission, SonarImage, Detection)
-│   │   ├── routes/
-│   │   ├── middlewares/ (auth, role, upload, error)
-│   │   ├── services/ (aiDetection, hazardScore, metadataParser, reportGenerator)
-│   │   ├── utils/ (ApiError, ApiResponse, asyncHandler)
-│   │   ├── app.js
-│   │   └── server.js
-│   ├── package.json
-│   └── .env.example
-└── frontend/
-    ├── src/
-    │   ├── components/ (Navbar, Sidebar, StatCard, DetectionCard, SonarUploader, DetectionOverlay, HazardBadge, MapComponent, LoadingPipeline)
-    │   ├── pages/ (Home, Login, Register, Dashboard, UploadMission, AnalysisResults, MissionHistory, MapView, AnomalyDetails, AdminDashboard)
-    │   ├── layouts/
-    │   ├── services/ (api)
-    │   ├── context/ (AuthContext)
-    │   ├── hooks/ (useAuth)
-    │   ├── utils/ (constants, formatters)
-    │   ├── App.jsx
-    │   └── main.jsx
-    ├── vite.config.js
-    ├── tailwind.config.js
-    └── .env.example
+Side-Scan Sonar Input (Image / Video / Log / Live Stream)
+        ↓ Upload (JPG/PNG/TIFF/ZIP, MP4/MOV/AVI/MKV/WEBM, XTF/JSF/SDF)
+        ↓ Preprocessing (CLAHE contrast normalization, speckle reduction)
+        ↓ YOLOv8 Object Detection (FastAPI inference service)
+        ↓ Confidence Filtering (low-confidence & natural features discarded)
+        ↓ Hazard Scoring (0–100)
+        ↓ Metadata Parsing + Geotagging
+        ↓ Interactive Map Visualization
+        ↓ JSON/CSV Report Generation
 ```
+
+---
+
+## ⚡ Key Features
+
 ### 🎯 Multi-Modal Sonar Ingestion
 - **Side-Scan Sonar Imagery:** High-resolution batch upload (`.jpg`, `.png`, `.tiff`, `.zip`) with automated speckle filtering and contrast enhancement.
 - **Continuous Sonar Video Streams:** Direct upload of ROV/AUV video feeds (`.mp4`, `.mov`, `.avi`, `.mkv`, `.webm`) sampled at dynamic frame intervals.
-- **Hydrographic Sonar Logs:** Native acoustic log processing supporting eXtended Triton Format (`.xtf`) and Edgetech (`.jsf`).
-- **Real-Time Drone / Webcam Ingestion:** Live browser-based optical/sonar stream prediction with adjustable drone-proxy capture cadences (1–10s) and dynamic detection overlays.
+- **Hydrographic Sonar Logs:** Native acoustic log processing supporting eXtended Triton Format (`.xtf`), Edgetech (`.jsf`), and `.sdf`.
+- **Real-Time Drone / Webcam Ingestion:** Live browser-based optical/sonar stream prediction with adjustable capture cadence (1–10s) and dynamic detection overlays.
 
-## 🚀 Quick Start
 ### 🧠 Intelligent Acoustic Object Detection & Filtering
 - **Trained Marine Object Classes:** Ghost Nets, Underwater Pipes, Metallic Cylinders, Shipwrecks, Aircraft Debris, and Unknown Anthropogenic Debris.
-- **Natural Feature Discrimination:** Automated acoustic filtering of benign seabed morphology (e.g., natural ridges, sand ripples, rocks) ensuring minimal false alarms.
-- **Dual Engine Architecture:** Production integration with dedicated Python FastAPI YOLO service (`https://sonarvision.onrender.com`) with automated fallback handling.
+- **Natural Feature Discrimination:** Automated filtering of benign seabed morphology (natural ridges, sand ripples, rocks) to minimize false alarms.
+- **YOLOv8 Inference Service:** A dedicated Python FastAPI microservice (`https://sonarvision.onrender.com`) runs the sonar-tuned YOLOv8 model, with automated fallback handling if the service is unreachable.
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-- Cloudinary account (optional, mock fallback exists)
 ### ⚠️ Dynamic Hazard & Risk Assessment
-- **Multi-Factor Scoring Matrix (0–100):** Real-time hazard indexing taking into account object classification, detection confidence, geometric scale (bounding box area), depth tier, and proximity to marine reserves/coral biomes.
+- **Multi-Factor Scoring Matrix (0–100):** Real-time hazard indexing based on object classification, detection confidence, geometric scale (bounding box area), depth tier, and proximity to marine reserves/coral biomes.
 - **Hazard Classification Tiers:**
   - `CRITICAL` (81–100) — Immediate environmental/navigational intervention required.
   - `HIGH` (61–80) — Substantial debris hazard requiring prompt recovery.
   - `MEDIUM` (31–60) — Monitored secondary anomaly.
   - `LOW` (0–30) — Negligible artificial imprint.
 
-### Backend Setup
 ### 🗺️ Interactive Geospatial Mapping & Telemetry
-- **Leaflet & OpenStreetMap Integration:** Live GPS positioning of all detected anomalies with interactive risk-graded radar pin markers.
-- **Interactive Sonar Inspection Overlays:** Visual canvas highlighting bounding boxes, confidence tags, dimensions, AI interpretation summaries, and recommended field countermeasures.
+- **Leaflet & OpenStreetMap Integration:** Live GPS positioning of all detected anomalies with risk-graded pin markers.
+- **Interactive Sonar Inspection Overlays:** Canvas highlighting bounding boxes, confidence tags, dimensions, AI interpretation summaries, and recommended field countermeasures.
 
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Edit .env with your values:
-# MONGO_URI=mongodb://localhost:27017/oceansentinel
-# JWT_SECRET=your_secret
-# CLOUDINARY_CLOUD_NAME=...
-# CLOUDINARY_API_KEY=...
-# CLOUDINARY_API_SECRET=...
-# FRONTEND_URL=http://localhost:5173
 ### 📊 Mission Governance & Enterprise Reporting
-- **Multi-Role Access Control (RBAC):** Distinct workflows for Field Researchers (mission authoring, uploads, inspection) and Administrators (fleet-wide analytics, user management, system diagnostics).
+- **Role-Based Access Control (RBAC):** Distinct workflows for Field Researchers (mission authoring, uploads, inspection) and Administrators (fleet-wide analytics, user management, system diagnostics).
 - **Export Formats:** Single-click generation of audit-ready JSON and CSV survey reports including timestamped coordinates, hazard classifications, and AI recommendations.
 
-npm run dev    # http://localhost:5000
-npm run seed   # optional: create demo users & missions
-```
 ---
 
-**Demo accounts created by seed:**
-- Admin: `admin@oceansentinel.ai / admin123`
-- Researcher: `researcher@oceansentinel.ai / researcher123`
 ## 🏗️ System Architecture
 
-### Frontend Setup
 ```mermaid
 flowchart TD
     subgraph Client ["Frontend (React 18 + Vite + Tailwind CSS)"]
@@ -171,11 +89,6 @@ flowchart TD
         AuthContext["Auth Context & Protected Routes"]
     end
 
-```bash
-cd frontend
-npm install
-cp .env.example .env
-# VITE_API_URL=http://localhost:5000/api
     subgraph Gateway ["Backend (Node.js + Express 4)"]
         API["Express API Server"]
         AuthMid["JWT & HTTP-Only Cookie Security"]
@@ -183,7 +96,6 @@ cp .env.example .env
         HazardEng["Hazard Scoring & Geo Engine"]
     end
 
-npm run dev    # http://localhost:5173
     subgraph AI_Cluster ["Acoustic AI Service (Python FastAPI)"]
         YOLO["YOLOv8 Acoustic Sonar Model"]
         ImgProc["Pre-processing & CLAHE Speckle Reduction"]
@@ -212,36 +124,46 @@ npm run dev    # http://localhost:5173
     API --> Map
 ```
 
-## 🔐 Auth & Roles
+The backend acts as a proxy to the YOLOv8 FastAPI service. The integration is isolated in `backend/src/services/aiDetection.service.js`, which forwards uploaded media to the inference service (`AI_SERVICE_URL`), transforms the YOLO response (`class`, `confidence`, `bbox`) into the platform's detection schema, and hands results to the hazard scoring engine. If the AI service is unreachable, the service falls back gracefully so mission uploads are never lost.
+
 ---
 
-- **Researcher**: Upload, analyze, view maps, download reports, history
-- **Admin**: Global analytics, all missions, users, high-risk anomalies
+## 🔐 Auth & Roles
+
+- **Researcher:** Upload, analyze, view maps, download reports, view history.
+- **Admin:** Global analytics, all missions, user management, high-risk anomalies.
+
+JWT in HTTP-only cookies with Bearer fallback, protected routes, and role-based middleware.
+
+---
+
 ## 🚀 Multi-Modal Ingestion Pipeline
 
-JWT in HTTP-only cookies + Bearer fallback, protected routes, role middleware.
 | Ingestion Mode | Input Supported | Target Page | Processing Pipeline | Output Artifact |
 | :--- | :--- | :--- | :--- | :--- |
-| **Still Sonar Images** | `.jpg`, `.png`, `.tiff`, `.zip` | `/upload` | Bounded batching, Cloudinary upload, `/predict/image` | Geo-referenced detections, overlay visualizations |
+| **Still Sonar Images** | `.jpg`, `.png`, `.tiff`, `.zip` | `/upload` | Bounded batching, Cloudinary upload, YOLOv8 `/predict/image` | Geo-referenced detections, overlay visualizations |
 | **Sonar Video Waterfall** | `.mp4`, `.mov`, `.avi`, `.mkv`, `.webm` | `/upload/video` | Temporal frame sampling (1 frame / 3s), frame batch inference | Sequential frame detections & anomalies timeline |
 | **Digital Sonar Logs** | `.xtf`, `.jsf`, `.sdf` | `/upload/log` | Raw sonar ping & channel parsing, acoustic mosaic inference | Ping metadata, acoustic waterfall coordinate maps |
 | **Real-Time Stream** | Video stream / Webcam / Drone Feed | `/realtime/:missionId` | Dynamic cadence polling (1–10s loop), in-flight gate | Realtime frame record, instant hazard alert overlay |
 
-## 🧠 Mock AI Engine
 ---
 
-File: `backend/src/services/aiDetection.service.js`
 ## 🧠 AI Detection & Hazard Scoring Engine
 
-- Simulates YOLO detection
-- Random 0-3 detections per image
-- Weighted types: Ghost Net (25%), Pipe (20%), Cylinder (15%), Shipwreck (10%), Unknown (20%), Rock (10% filtered)
-- Confidence filtering: <0.50 ignored, 0.50-0.69 Low, 0.70-0.84 Medium, 0.85-0.94 High, 0.95-1.0 Very High
-- Natural objects (Rock, Sand Ripple) filtered
-- Future: Replace `analyzeSonarImage()` with `axios.post(AI_SERVICE_URL)`
-### 1. Acoustic Target Classes & Weights
+### AI Detection Service
+- **Model:** Ultralytics YOLOv8, sonar-tuned checkpoints served via Python FastAPI.
+- **Pre-processing:** OpenCV CLAHE contrast normalization and despeckling before inference.
+- **Backend integration:** `backend/src/services/aiDetection.service.js` posts media to `AI_SERVICE_URL` and normalizes the response.
+- **Confidence filtering:** Low-confidence detections (below 50%) are ignored; natural features (rocks, sand ripples) are filtered out.
 
-## ⚠️ Hazard Scoring
+Example YOLO service response:
+
+```json
+{ "detections": [{ "class": "ghost_net", "confidence": 0.94, "bbox": [120, 80, 350, 230] }] }
+```
+
+### 1. Acoustic Target Classes & Base Risk
+
 ```
   [Ghost Net]       ==> Base Risk: 80 | Critical entangler for marine fauna
   [Shipwreck]       ==> Base Risk: 70 | Navigational hazard & fuel/chemical risk
@@ -251,45 +173,33 @@ File: `backend/src/services/aiDetection.service.js`
   [Rock / Ripple]   ==> Ignored       | Filtered as benign seabed morphology
 ```
 
-File: `backend/src/services/hazardScore.service.js`
 ### 2. Multi-Parameter Hazard Formula
-The platform computes a unified **Hazard Score (0–100)** evaluating:
+
+The platform computes a unified **Hazard Score (0–100)** (`backend/src/services/hazardScore.service.js`):
+
 $$\text{Hazard Score} = \text{Base Risk} + \Delta_{\text{size}} + \Delta_{\text{confidence}} + \Delta_{\text{location}} + \Delta_{\text{depth}}$$
 
-Base risk: Ghost Net 80, Shipwreck 70, Cylinder 60, Pipe 50, Unknown 40
-- **Scale Bonus ($\Delta_{\text{size}}$):** $+10$ to $+15$ points for anomalies spanning significant seabed area.
-- **Confidence Bonus ($\Delta_{\text{confidence}}$):** $+5$ to $+10$ points for detections with confidence $\ge 85\%$.
-- **Eco-Zone Sensitivity ($\Delta_{\text{location}}$):** $+10$ points if coordinates fall within designated marine protected areas, sanctuaries, or coral reefs.
-- **Shallow Water Navigation Hazard ($\Delta_{\text{depth}}$):** $+5$ points for depths $< 30\,\text{m}$ posing surface vessel collision risk.
+- **Scale Bonus ($\Delta_{\text{size}}$):** +10 to +15 points for anomalies spanning significant seabed area.
+- **Confidence Bonus ($\Delta_{\text{confidence}}$):** +5 to +10 points for detections with confidence ≥ 85%.
+- **Eco-Zone Sensitivity ($\Delta_{\text{location}}$):** +10 points if coordinates fall within marine protected areas, sanctuaries, or coral reefs.
+- **Shallow Water Navigation Hazard ($\Delta_{\text{depth}}$):** +5 points for depths < 30 m posing surface vessel collision risk.
 
-Bonuses:
-- Large size (+10-15)
-- High confidence (+5-10)
-- Sensitive zone (coral, reserve) (+10)
-- Shallow depth (<30m +5)
+Levels: 0–30 LOW (green), 31–60 MEDIUM (yellow), 61–80 HIGH (orange), 81–100 CRITICAL (red).
+
 ---
 
-Levels: 0-30 LOW (green), 31-60 MEDIUM (yellow), 61-80 HIGH (orange), 81-100 CRITICAL (red)
 ## 📁 Repository Structure
 
-## 🗺️ API Endpoints
-
 ```
-Auth:
-POST /api/auth/register
-POST /api/auth/login
-POST /api/auth/logout
-GET  /api/auth/me
-GET  /api/auth/users (admin)
 SonarVision_frontend/
 ├── backend/
 │   ├── src/
 │   │   ├── config/             # MongoDB Atlas connection & database seeders
-│   │   ├── controllers/        # Controllers (auth, mission, upload, video, log, realtime, analysis, etc.)
+│   │   ├── controllers/        # auth, mission, upload, video, log, realtime, analysis, etc.
 │   │   ├── middlewares/        # JWT auth, role validation, Multer uploads, error handler
-│   │   ├── models/             # Mongoose schemas: User, Mission, SonarImage, Video, SonarLog, RealtimeFrame, Detection
+│   │   ├── models/             # User, Mission, SonarImage, Video, SonarLog, RealtimeFrame, Detection
 │   │   ├── routes/             # Express API routing definitions
-│   │   ├── services/           # AI detection proxy, hazard scoring, metadata parser, reporting
+│   │   ├── services/           # AI detection (YOLO proxy), hazard scoring, metadata parser, reporting
 │   │   ├── utils/              # ApiError, ApiResponse, asyncHandler helpers
 │   │   ├── app.js              # Express app configuration, CORS, middleware assembly
 │   │   └── server.js           # Server bootstrap & process lifecycle
@@ -298,11 +208,11 @@ SonarVision_frontend/
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/         # Reusable UI components (Navbar, Sidebar, HazardBadge, DetectionOverlay, MapComponent, etc.)
+│   │   ├── components/         # Navbar, Sidebar, HazardBadge, DetectionOverlay, MapComponent, etc.
 │   │   ├── context/            # AuthContext (state, tokens, session management)
 │   │   ├── hooks/              # Custom React hooks (useAuth, etc.)
 │   │   ├── layouts/            # DashboardLayout, AdminLayout
-│   │   ├── pages/              # Application views:
+│   │   ├── pages/              # Application views
 │   │   │   ├── Home.jsx             # Hero landing page with animated sonar radar
 │   │   │   ├── Login.jsx & Register # Authentication & role onboarding
 │   │   │   ├── Dashboard.jsx        # Researcher overview & telemetry metrics
@@ -327,27 +237,14 @@ SonarVision_frontend/
 │   ├── vite.config.js
 │   └── tailwind.config.js
 │
-├── requirements.txt            # Unified project dependency manifesto
+├── requirements.txt            # Unified project dependency manifest
 └── README.md                   # System documentation
 ```
 
-Missions:
-POST /api/missions
-GET  /api/missions?search=&status=&page=&limit=
-GET  /api/missions/:id
-DELETE /api/missions/:id
-GET  /api/missions/stats/overview
 ---
 
-Upload:
-POST /api/upload/sonar (multipart, field: sonarImages, body: missionId)
-POST /api/upload/metadata (CSV)
 ## 🗺️ API Endpoints Reference
 
-Analysis:
-POST /api/analysis/:missionId/start
-GET  /api/analysis/:missionId
-GET  /api/analysis/:missionId/status
 ### 🔐 Authentication (`/api/auth`)
 - `POST /api/auth/register` — Register new researcher or operator account.
 - `POST /api/auth/login` — Authenticate and receive JWT cookie + payload.
@@ -355,12 +252,6 @@ GET  /api/analysis/:missionId/status
 - `GET  /api/auth/me` — Retrieve active profile & permission metadata.
 - `GET  /api/auth/users` — *(Admin only)* List all registered platform users.
 
-Detections:
-GET  /api/detections?missionId=&objectType=&hazardLevel=&minConfidence=&search=&page=&limit=
-GET  /api/detections/high-risk
-GET  /api/detections/mission/:missionId
-GET  /api/detections/:id
-DELETE /api/detections/:id
 ### 🚢 Missions & Telemetry (`/api/missions`)
 - `POST /api/missions` — Initialize new mission profile (coordinates, vessel, depth, metadata).
 - `GET  /api/missions` — Query paginated missions with search, status, and date filters.
@@ -368,10 +259,6 @@ DELETE /api/detections/:id
 - `DELETE /api/missions/:id` — Delete mission and cascade associated detections.
 - `GET  /api/missions/stats/overview` — High-level KPI aggregations for active researcher.
 
-Reports:
-GET /api/reports/:missionId/json
-GET /api/reports/:missionId/csv
-GET /api/reports/:missionId/preview
 ### 📤 Multi-Modal Ingestion (`/api/upload`, `/api/video`, `/api/logs`, `/api/realtime`)
 - `POST /api/upload/sonar` — Upload sonar images (multipart, field: `sonarImages`).
 - `POST /api/upload/metadata` — Import mission metadata CSV.
@@ -385,52 +272,54 @@ GET /api/reports/:missionId/preview
 - `POST /api/realtime/:missionId/record` — Commit detected frame to mission history.
 - `POST /api/realtime/:missionId/end` — Conclude live session and compile mission report.
 
-Analytics:
-GET /api/analytics/dashboard
-GET /api/analytics/trends
-GET /api/analytics/system (admin)
-```
 ### 🔍 Detections & Hazard Analysis (`/api/detections`, `/api/analysis`)
-- `POST /api/analysis/:missionId/start` — Dispatch AI inference pipeline for mission images.
+- `POST /api/analysis/:missionId/start` — Dispatch YOLOv8 inference pipeline for mission media.
 - `GET  /api/analysis/:missionId` — Retrieve classified bounding boxes and images.
+- `GET  /api/analysis/:missionId/status` — Poll analysis progress.
 - `GET  /api/detections` — Search and filter detections by class, hazard level, and confidence.
 - `GET  /api/detections/high-risk` — Fetch prioritized anomalies requiring intervention.
+- `GET  /api/detections/mission/:missionId` — List detections for a mission.
 - `GET  /api/detections/:id` — Inspect individual detection metadata and spatial metrics.
+- `DELETE /api/detections/:id` — Remove a detection.
 
-## 📊 Frontend Pages
 ### 📑 Reports & System Analytics (`/api/reports`, `/api/analytics`)
 - `GET  /api/reports/:missionId/json` — Export complete mission audit packet as JSON.
 - `GET  /api/reports/:missionId/csv` — Generate geospatial survey spreadsheet (CSV).
 - `GET  /api/reports/:missionId/preview` — In-browser preview of compiled findings.
-- `GET  /api/analytics/dashboard` — Platform detection distribution, hazard charts, and trends.
+- `GET  /api/analytics/dashboard` — Detection distribution, hazard charts, and trends.
+- `GET  /api/analytics/trends` — Detection trends over time.
 - `GET  /api/analytics/system` — *(Admin only)* Server health, storage footprint, and throughput.
 
-- `/` Landing with sonar animation, problem/solution, features, stats
+---
+
+## 📊 Frontend Pages
+
+- `/` — Landing with sonar animation, problem/solution, features, stats
 - `/login`, `/register`
-- `/dashboard` Researcher analytics (missions, images, hazards, critical, charts)
-- `/upload` 3-step: Mission metadata → Upload (dropzone) → AI analysis (pipeline animation)
-- `/analysis/:missionId` Sonar overlay with bounding boxes, toggles, detection cards, download
-- `/missions` History table with search/filter
-- `/map` Leaflet map with risk-colored markers, popups
-- `/anomalies/:id` Full detail, location, dimensions, AI interpretation, recommendation
-- `/anomalies` High-risk list
-- `/admin` Global analytics, top critical, system stats
+- `/dashboard` — Researcher analytics (missions, images, hazards, critical, charts)
+- `/upload` — 3-step flow: Mission metadata → Upload (dropzone) → AI analysis (pipeline animation)
+- `/upload/video`, `/upload/log` — Video and sonar log ingestion
+- `/realtime/:missionId` — Live drone/webcam inference
+- `/analysis/:missionId` — Sonar overlay with bounding boxes, toggles, detection cards, download
+- `/missions` — History table with search/filter
+- `/map` — Leaflet map with risk-colored markers and popups
+- `/anomalies` — High-risk list
+- `/anomalies/:id` — Full detail, location, dimensions, AI interpretation, recommendation
+- `/admin` — Global analytics, top critical, system stats
+
 ---
 
 ## 🎨 UI/UX
-## 🚀 Quick Start & Installation
 
-- Dark ocean theme: #020617 background, #0f172a cards, cyan #22d3ee accents
-- Glassmorphism, Framer Motion, sonar radar animation, custom scrollbars
-- Responsive, desktop-first dashboard, professional government/research feel
-### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **MongoDB**: Local instance (v6.0+) or MongoDB Atlas cluster URI
-- **Cloudinary Account**: Cloud name, API Key, and API Secret for image CDN storage
+- Dark ocean theme: `#020617` background, `#0f172a` cards, cyan `#22d3ee` accents
+- Glassmorphism, Framer Motion transitions, sonar radar animation, custom scrollbars
+- Responsive, desktop-first dashboard with a professional government/research feel
+
+---
 
 ## 📄 Reports
 
-JSON:
+**JSON**
 ```json
 {
   "mission": "Mission Alpha",
@@ -440,37 +329,42 @@ JSON:
   "criticalHazards": 3,
   "detections": [...]
 }
+```
+
+**CSV columns:** Mission, Object Type, Confidence, Hazard Score, Hazard Level, Latitude, Longitude, Width, Length, Timestamp, AI Interpretation, Recommendation
+
+---
+
+## 🚀 Quick Start & Installation
+
+### Prerequisites
+- **Node.js** v18.0.0 or higher
+- **MongoDB** — local instance (v6.0+) or MongoDB Atlas cluster URI
+- **Cloudinary account** — cloud name, API key, and API secret for image CDN storage
+- **YOLOv8 inference service** — the hosted FastAPI service, or your own deployment (set via `AI_SERVICE_URL`)
+
 ### 1. Clone & Setup Workspace
 ```bash
 git clone https://github.com/lalitchandra00/SonarVision_frontend.git
 cd SonarVision_frontend
 ```
 
-CSV columns: Mission, Object Type, Confidence, Hazard Score, Hazard Level, Latitude, Longitude, Width, Length, Timestamp, AI Interpretation, Recommendation
 ### 2. Backend Installation & Execution
 ```bash
 cd backend
 npm install
 
-## 🔮 Future YOLO Integration
 # Create local environment configuration
 cp .env.example .env   # Or create .env based on the configuration guide below
 
-Keep logic isolated in `aiDetection.service.js`. Replace mock with:
-# Seed demo users & sample missions (Optional)
+# Seed demo users & sample missions (optional)
 npm run seed
 
-```js
-const res = await axios.post(process.env.AI_SERVICE_URL, { image_url: imageUrl })
-return transformYOLOResponse(res.data)
 # Launch backend in development mode
 npm run dev
 # Server running at: http://localhost:5000
 ```
 
-Expected YOLO response:
-```json
-{ "detections": [{ "class": "ghost_net", "confidence": 0.94, "bbox": [120,80,350,230] }] }
 > **Default Seed Accounts:**
 > - **Administrator:** `admin@oceansentinel.ai` / `admin123`
 > - **Lead Researcher:** `researcher@oceansentinel.ai` / `researcher123`
@@ -485,51 +379,37 @@ npm run dev
 # Vite client running at: http://localhost:5173
 ```
 
-## 🛠️ .env Examples
 ---
 
-**Backend `.env.example`** already provided. Required:
-```
 ## ⚙️ Environment Variables & Deployment
 
 ### Backend Configuration (`backend/.env`)
 ```env
 PORT=5000
-MONGO_URI=mongodb://...
-JWT_SECRET=...
 NODE_ENV=development
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/oceansentinel?retryWrites=true&w=majority
 JWT_SECRET=your_super_secret_jwt_key_here
 JWT_EXPIRE=7d
 FRONTEND_URL=http://localhost:5173
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
 
 # Cloudinary Storage
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
-# AI Detection Microservice (FastAPI YOLO)
+# AI Detection Microservice (FastAPI YOLOv8)
 AI_SERVICE_URL=https://sonarvision.onrender.com
 ```
 
-**Frontend `.env.example`**
-```
 ### Frontend Configuration (`frontend/.env`)
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## 📦 Deliverable
 ---
 
-Complete project ready for `npm install` and `npm run dev` in both folders. Zip file includes frontend + backend + README + .env.example.
 ## 🛠️ Technology Stack Detail
 
-Workflow verified:
-Login → Create Mission → Upload Sonar → Start AI Analysis (animated pipeline) → Mock Detection → Filtering → Hazard Scoring → Geotagging → Visualization → Map → Download JSON/CSV
 ```
 Frontend:
   ├── Core Framework: React 18.3.1 (Vite 5.3.3)
@@ -555,14 +435,12 @@ AI Microservice:
 
 ---
 
-Built for marine conservation teams and underwater monitoring agencies. Professional, production-style, reusable components, MVC backend, centralized error handling, loading/empty states, toast notifications, form validation.
 ## 🛡️ Security & Compliance
 
-**OceanSentinel AI** — Cleaner oceans through intelligent sonar analysis.
-- **Sanitized Upload Pipelines:** Dual-stage file validation strictly whitelisting verified MIME types for sonar imagery, hydrographic logs, and video formats with strict byte-size ceilings.
-- **Secure Token Delivery:** Bearer JWT tokens delivered with configurable HTTP-only cookies preventing cross-site scripting (XSS) compromise.
-- **CORS Hardening:** Rigorous origin whitelisting protecting endpoints against cross-origin forgery.
-- **Graceful Fault Tolerance:** Unreachable remote AI service triggers internal model fallback heuristics ensuring zero data loss during mission uploads.
+- **Sanitized Upload Pipelines:** Dual-stage file validation strictly whitelisting verified MIME types for sonar imagery, hydrographic logs, and video formats, with byte-size ceilings.
+- **Secure Token Delivery:** Bearer JWT tokens with configurable HTTP-only cookies to mitigate XSS token theft.
+- **CORS Hardening:** Strict origin whitelisting to protect endpoints against cross-origin abuse.
+- **Graceful Fault Tolerance:** If the remote AI service is unreachable, the backend falls back gracefully so no data is lost during mission uploads.
 
 ---
 
@@ -575,5 +453,5 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 ---
 
 <div align="center">
-  <sub>Developed for Autonomous Marine Debris Remediation & Oceanic Conservation.</sub>
+  <sub>Developed for Autonomous Marine Debris Remediation & Oceanic Conservation.<br/><b>OceanSentinel AI</b> — Cleaner oceans through intelligent sonar analysis.</sub>
 </div>
