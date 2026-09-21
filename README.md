@@ -149,17 +149,16 @@ Example prediction service response:
 }
 ```
 
-### 1. Acoustic Target Classes & Base Risk
+### 1. Acoustic Target Classes
 
 ```
-  [Ghost Net]       ==> Base Risk: 80 | Critical entangler for marine fauna
-  [Shipwreck]       ==> Base Risk: 70 | Navigational hazard & fuel/chemical risk
-  [Cylinder]        ==> Base Risk: 60 | Pressurized or hazardous cargo threat
-  [Pipe]            ==> Base Risk: 50 | Discarded industrial conduit
-  [Unknown Debris]  ==> Base Risk: 40 | Unclassified artificial signature
-  [Plane]           ==> Base Risk: 75 | Submerged aircraft target
-  [Human]           ==> Base Risk: 85 | Possible human-related target
-  [Rock / Ripple]   ==> Ignored       | Filtered as benign seabed morphology
+  [Ghost Net]    
+  [Shipwreck]       
+  [Cylinder]       
+  [Pipe]            
+  [Plane]           
+  [Human]     
+ 
 ```
 
 ### 2. Multi-Parameter Hazard Formula
