@@ -221,16 +221,19 @@ Training runs in **`backend/model.ipynb`** on Google Colab with automatic resume
 
 ## Model Performance
 
-Recorded in `backend/best/training_summary.txt` (also visible in `runs/dataset_yolov8/results.png`):
+Precision-recall results at IoU 0.5 (AP@0.5):
 
-| Metric | Value |
-|--------|-------|
-| Model | YOLOv8s (`imgsz=640`) |
-| Best epoch | 88 |
-| Val mAP50 | **0.8506** |
-| Val mAP50-95 | **0.6661** |
-| Total epochs | 100 |
-| Batch | 80 |
+| Class | AP@0.5 |
+|-------|--------:|
+| Pipe | **99.5%** |
+| Shipwreck | **97.8%** |
+| Cylinder | **87.4%** |
+| Ghost net | **83.0%** |
+| Plane | **91.6%** |
+| Human | **78.9%** |
+| **All classes (mAP@0.5)** | **89.7%** |
+
+These values are average precision scores at an IoU threshold of 0.5, not standalone classification accuracy. The overall mAP@0.5 is the mean AP across the six classes.
 
 ---
 

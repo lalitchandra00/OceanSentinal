@@ -81,50 +81,29 @@ Side-Scan Sonar Input (Image / Video / Log / Live Stream)
 ## 🏗️ System Architecture
 
 ```mermaid
-flowchart TD
-    subgraph Client ["Frontend (React 18 + Vite + Tailwind CSS)"]
-        UI["Mission Control UI / Dashboard"]
-        RealtimeUI["Real-time Drone Stream (:missionId)"]
-        Map["Leaflet GIS Map & Overlays"]
-        AuthContext["Auth Context & Protected Routes"]
-    end
+flowchart LR
+  User["Researcher or Admin"] --> Web["React Frontend\nVite + Tailwind + Leaflet"]
+  Web -->|REST / JSON / multipart uploads| API["Node.js Backend\nExpress + JWT + RBAC"]
 
-    subgraph Gateway ["Backend (Node.js + Express 4)"]
-        API["Express API Server"]
-        AuthMid["JWT & HTTP-Only Cookie Security"]
-        UploadMid["Multer (Memory/Disk) + Cloudinary"]
-        HazardEng["Hazard Scoring & Geo Engine"]
-    end
+  API -->|missions, users, detections, reports| Mongo[("MongoDB Atlas")]
+  API -->|uploads and generated assets| CDN[("Cloudinary")]
+  API -->|image, video, realtime, or log file| AI["FastAPI ML Service\nRender: oceansentinal.onrender.com"]
 
-    subgraph AI_Cluster ["Acoustic AI Service (Python FastAPI)"]
-        YOLO["YOLOv8 Acoustic Sonar Model"]
-        ImgProc["Pre-processing & CLAHE Speckle Reduction"]
-        VideoSampler["Video Frame Extraction Engine"]
-        LogParser["XTF/JSF Stream Interpreter"]
-    end
-
-    subgraph Storage ["Persistent Storage"]
-        Mongo[("MongoDB Atlas (Missions, Detections, Logs)")]
-        Cloudinary[("Cloudinary Asset CDN")]
-    end
-
-    UI -->|REST API + Bearer/Cookie| API
-    RealtimeUI -->|Snapshot Frame Posts| API
-    API --> AuthMid
-    API --> UploadMid
-    UploadMid --> Cloudinary
-    API -->|Multipart Form-Data| YOLO
-    YOLO --> ImgProc
-    YOLO --> VideoSampler
-    YOLO --> LogParser
-    YOLO -->|BBoxes + Classes + Confidences| API
-    API --> HazardEng
-    HazardEng --> Mongo
-    Mongo --> API
-    API --> Map
+  AI --> Preprocess["Noise filtering\nCLAHE + OpenCV"]
+  Preprocess --> Model["YOLOv8 ONNX\nONNX Runtime"]
+  Model -->|detections and annotated assets| AI
+  AI -->|JSON detections and asset URLs| API
+  API -->|hazard score + normalized result| Web
 ```
 
-The backend acts as a proxy to the YOLOv8 FastAPI service. The integration is isolated in `backend/src/services/aiDetection.service.js`, which forwards uploaded media to the inference service (`AI_SERVICE_URL`), transforms the YOLO response (`class`, `confidence`, `bbox`) into the platform's detection schema, and hands results to the hazard scoring engine. If the AI service is unreachable, the service falls back gracefully so mission uploads are never lost.
+### Request lifecycle
+
+1. The React frontend sends authenticated uploads and mission actions to the Express backend.
+2. The backend validates the request, forwards supported media to the FastAPI service through `AI_SERVICE_URL`, and receives structured detections.
+3. The backend normalizes detections, calculates hazard scores, stores mission data in MongoDB, and returns the result to the frontend.
+4. Images and annotated prediction assets are stored in Cloudinary; the API returns their URLs instead of large base64 payloads.
+
+The FastAPI service performs preprocessing, video/log handling, ONNX inference, and annotation. The frontend never calls the ML service directly, which keeps authentication, persistence, and service credentials inside the backend boundary.
 
 ---
 
