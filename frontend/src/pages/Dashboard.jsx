@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaWater, FaExclamationTriangle, FaImages, FaMapMarkedAlt, FaUpload } from 'react-icons/fa';
-import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import api from '../services/api';
 import StatCard from '../components/StatCard';
 
@@ -93,29 +93,55 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="glass rounded-2xl p-6">
-          <h3 className="font-semibold mb-6">Object Distribution</h3>
-          <div className="h-[280px]">
-            {charts.objectDistribution.length === 0 ? (
-              <div className="flex items-center justify-center h-full text-sm text-white/30">No detections recorded yet</div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={charts.objectDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
-                    {charts.objectDistribution.map((_, idx) => (
-                      <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f1f5f9' }}
-                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                    itemStyle={{ color: '#e2e8f0' }}
-                  />
-                  <Legend wrapperStyle={{ color: '#94a3b8', fontSize: '12px' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
+        <div className="glass rounded-2xl p-6 flex flex-col">
+          <h3 className="font-semibold mb-4">Object Distribution</h3>
+          {charts.objectDistribution.length === 0 ? (
+            <div className="flex items-center justify-center flex-1 min-h-[200px] text-sm text-white/30">No detections recorded yet</div>
+          ) : (
+            <>
+              <div className="h-[200px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={charts.objectDistribution}
+                      cx="50%" cy="50%"
+                      innerRadius={55} outerRadius={85}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {charts.objectDistribution.map((_, idx) => (
+                        <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f1f5f9' }}
+                      labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                      itemStyle={{ color: '#e2e8f0' }}
+                      formatter={(value, name) => {
+                        const total = charts.objectDistribution.reduce((s, d) => s + d.value, 0);
+                        return [`${value} (${((value / total) * 100).toFixed(1)}%)`, name];
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              {/* Custom legend with white text */}
+              <div className="mt-3 flex flex-col gap-1.5 overflow-y-auto max-h-[90px] pr-1">
+                {charts.objectDistribution.map((entry, idx) => {
+                  const total = charts.objectDistribution.reduce((s, d) => s + d.value, 0);
+                  return (
+                    <div key={idx} className="flex items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: COLORS[idx % COLORS.length] }} />
+                        <span className="text-white/70 truncate">{entry.name}</span>
+                      </div>
+                      <span className="text-white/40 mono flex-shrink-0">{entry.value} · {((entry.value / total) * 100).toFixed(0)}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
